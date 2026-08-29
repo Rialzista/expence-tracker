@@ -5,6 +5,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 
 import { AuthModule } from './auth/auth.module.js';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard.js';
+import { CategoriesModule } from './categories/categories.module.js';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
 import { HealthController } from './common/health.controller.js';
 import { validateEnv } from './config/env.schema.js';
@@ -25,6 +26,7 @@ import { UsersModule } from './users/users.module.js';
     PrismaModule,
     UsersModule,
     AuthModule,
+    CategoriesModule,
   ],
   controllers: [HealthController],
   providers: [
