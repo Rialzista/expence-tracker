@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "NestJS",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolvePackageJsonExports": true,
+    "allowSyntheticDefaultImports": true,
+    "removeComments": true,
+    "declaration": false,
+    "declarationMap": false,
+
+    // Nest внедряет зависимости через декораторы, поэтому свойства
+    // присваиваются вне конструктора и строгая проверка инициализации
+    // даёт ложные срабатывания.
+    "strictPropertyInitialization": false,
+
+    // Параметры конструктора с модификаторами доступа — основной способ
+    // объявить зависимости, и правило считает их неиспользуемыми.
+    "noUnusedParameters": false
+  }
+}
