@@ -1,0 +1,37 @@
+# Зависимости
+node_modules/
+.pnpm-store/
+
+# Сборка
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Turborepo
+.turbo/
+
+# Окружение
+.env
+.env.local
+.env.*.local
+
+# Тесты
+coverage/
+
+# Prisma — сгенерированный клиент
+apps/api/src/generated/
+
+# Редакторы и ОС
+.idea/
+.vscode/
+.DS_Store
+
+# Claude Code — локальные разрешения конкретной машины
+.claude/settings.local.json
+
+# Логи
+*.log
+npm-debug.log*
+pnpm-debug.log*
