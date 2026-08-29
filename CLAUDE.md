@@ -108,6 +108,27 @@ Conventional Commits, заголовок на русском в повелите
 Перед коммитом: `pnpm lint && pnpm typecheck && pnpm test`, а при правках
 в `apps/api` — ещё и `pnpm db:up && cd apps/api && pnpm test:e2e`.
 
+## Git-флоу (GitHub Flow)
+
+Основная ветка — `main`, всегда в деплоящемся состоянии. Прямые коммиты в `main`
+не делаются — вся работа идёт через короткоживущие фича-ветки и Pull Request.
+
+Именование веток — `<тип>/<краткое-описание-через-дефисы>` на английском, тип —
+один из тех, что используются в Conventional Commits (`feature`, `fix`, `refactor`,
+`chore`, `docs`), например: `feature/main-screen`, `fix/transactions-summary`.
+
+Процесс:
+
+1. Новая ветка создаётся от актуального `main` (`git checkout main && git pull &&
+   git checkout -b feature/...`).
+2. Работа и коммиты — по правилам из раздела «Коммиты» выше.
+3. Ветка пушится в origin, открывается Pull Request в `main` через `gh pr create`.
+4. Перед открытием PR — тот же чек-лист, что и перед коммитом
+   (`pnpm lint && pnpm typecheck && pnpm test`, при правках в `apps/api` — ещё
+   `pnpm test:e2e`).
+5. Слияние — только через PR (Squash and merge или обычный merge, без
+   `git push --force` в `main`), ветка после слияния удаляется.
+
 ## Как устроены контракты (packages/shared)
 
 Одна Zod-схема в `packages/shared/src/schemas/*.schema.ts` обслуживает три места одновременно:
