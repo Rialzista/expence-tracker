@@ -10,6 +10,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
 import { HealthController } from './common/health.controller.js';
 import { validateEnv } from './config/env.schema.js';
 import { PrismaModule } from './prisma/prisma.module.js';
+import { TransactionsModule } from './transactions/transactions.module.js';
 import { UsersModule } from './users/users.module.js';
 
 @Module({
@@ -27,6 +28,7 @@ import { UsersModule } from './users/users.module.js';
     UsersModule,
     AuthModule,
     CategoriesModule,
+    TransactionsModule,
   ],
   controllers: [HealthController],
   providers: [

@@ -20,6 +20,16 @@ export class CategoriesService {
     return categories.map(toCategoryResponse);
   }
 
+  /**
+   * Возвращает null для чужой или несуществующей категории — используется
+   * модулем transactions через GetCategoryByIdQuery для проверки, что
+   * categoryId в теле запроса принадлежит текущему пользователю.
+   */
+  async findOne(userId: string, id: string): Promise<CategoryResponse | null> {
+    const category = await this.repository.findByIdForUser(id, userId);
+    return category ? toCategoryResponse(category) : null;
+  }
+
   async create(userId: string, dto: CreateCategoryDto): Promise<CategoryResponse> {
     try {
       const category = await this.repository.create({ userId, ...dto });

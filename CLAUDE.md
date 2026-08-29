@@ -139,8 +139,16 @@ Prisma CLI больше не грузит `.env` автоматически — 
 `app.module.ts` — он `global: true`, и повторный вызов в другом модуле завёл бы вторую шину,
 из-за которой команды перестали бы находить свои хендлеры. Модуль `categories` переведён
 на тот же паттерн (`CategoriesRepository` + `CategoriesService` не экспортируются, наружу —
-`CreateCategoryCommand`/`UpdateCategoryCommand`/`DeleteCategoryCommand`/`GetCategoriesQuery`).
-Домен `transactions` на этот паттерн пока не переведён — его сервис остаётся заглушкой.
+`CreateCategoryCommand`/`UpdateCategoryCommand`/`DeleteCategoryCommand`/`GetCategoriesQuery`/
+`GetCategoryByIdQuery`). Домен `transactions` устроен так же
+(`TransactionsRepository` + `TransactionsService` не экспортируются, наружу —
+`CreateTransactionCommand`/`UpdateTransactionCommand`/`DeleteTransactionCommand`/
+`GetTransactionsQuery`/`GetTransactionQuery`/`GetTransactionsSummaryQuery`).
+
+`TransactionsService` — первый потребитель чужого модуля по этой шине: перед записью
+операции он проверяет `categoryId` через `GetCategoryByIdQuery` (отдаёт `null`, а не 404 —
+решение принимает вызывающая сторона), а для сводки берёт названия категорий через
+`GetCategoriesQuery`. Прямого импорта `CategoriesService` нет и быть не должно.
 
 Переменные окружения валидируются один раз на старте через Zod-схему
 (`apps/api/src/config/env.schema.ts`), подключённую в `ConfigModule.forRoot({ validate })` —
