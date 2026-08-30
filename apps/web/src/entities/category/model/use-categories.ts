@@ -4,9 +4,11 @@ import type { CategoryResponse } from '@expense-tracker/shared';
 
 import { api } from '@/lib/api-client';
 
+import { categoryKeys } from './query-keys';
+
 export function useCategories() {
   return useQuery({
-    queryKey: ['categories'],
+    queryKey: categoryKeys.all,
     queryFn: () => api.get<CategoryResponse[]>('/categories'),
   });
 }

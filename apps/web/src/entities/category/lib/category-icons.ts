@@ -1,0 +1,60 @@
+import {
+  Baby,
+  Briefcase,
+  Bus,
+  Car,
+  Coffee,
+  Dumbbell,
+  Film,
+  Gamepad2,
+  Gift,
+  GraduationCap,
+  HeartPulse,
+  Home,
+  Landmark,
+  type LucideIcon,
+  PawPrint,
+  PiggyBank,
+  Plane,
+  Shirt,
+  ShoppingCart,
+  Smartphone,
+  Tag,
+  UtensilsCrossed,
+  Wallet,
+  Wifi,
+  Zap,
+} from 'lucide-react';
+
+export const CATEGORY_ICON_OPTIONS: { slug: string; label: string; Icon: LucideIcon }[] = [
+  { slug: 'shopping-cart', label: 'Покупки', Icon: ShoppingCart },
+  { slug: 'utensils', label: 'Еда', Icon: UtensilsCrossed },
+  { slug: 'coffee', label: 'Кафе', Icon: Coffee },
+  { slug: 'car', label: 'Транспорт', Icon: Car },
+  { slug: 'bus', label: 'Общественный транспорт', Icon: Bus },
+  { slug: 'home', label: 'Жильё', Icon: Home },
+  { slug: 'zap', label: 'Коммунальные услуги', Icon: Zap },
+  { slug: 'wifi', label: 'Интернет и связь', Icon: Wifi },
+  { slug: 'smartphone', label: 'Техника', Icon: Smartphone },
+  { slug: 'heart-pulse', label: 'Здоровье', Icon: HeartPulse },
+  { slug: 'dumbbell', label: 'Спорт', Icon: Dumbbell },
+  { slug: 'film', label: 'Развлечения', Icon: Film },
+  { slug: 'gamepad', label: 'Игры', Icon: Gamepad2 },
+  { slug: 'plane', label: 'Путешествия', Icon: Plane },
+  { slug: 'graduation-cap', label: 'Образование', Icon: GraduationCap },
+  { slug: 'shirt', label: 'Одежда', Icon: Shirt },
+  { slug: 'gift', label: 'Подарки', Icon: Gift },
+  { slug: 'paw-print', label: 'Питомцы', Icon: PawPrint },
+  { slug: 'baby', label: 'Дети', Icon: Baby },
+  { slug: 'wallet', label: 'Зарплата', Icon: Wallet },
+  { slug: 'briefcase', label: 'Работа', Icon: Briefcase },
+  { slug: 'piggy-bank', label: 'Сбережения', Icon: PiggyBank },
+  { slug: 'landmark', label: 'Переводы и банк', Icon: Landmark },
+  { slug: 'tag', label: 'Прочее', Icon: Tag },
+];
+
+export const DEFAULT_CATEGORY_ICON = 'tag';
+
+export function getCategoryIcon(slug: string | null | undefined): LucideIcon {
+  return CATEGORY_ICON_OPTIONS.find((option) => option.slug === slug)?.Icon ?? Tag;
+}

@@ -3,6 +3,7 @@ import { http, HttpResponse } from 'msw';
 import type {
   AuthResponse,
   CategoryResponse,
+  CreateCategoryDto,
   CreateTransactionDto,
   Paginated,
   TransactionResponse,
@@ -81,6 +82,22 @@ export const handlers = [
         date: dto.date,
         note: dto.note ?? null,
         categoryId: dto.categoryId ?? null,
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-01T00:00:00.000Z',
+      },
+      { status: 201 },
+    );
+  }),
+  http.post(`${BASE_URL}/categories`, async ({ request }) => {
+    const dto = (await request.json()) as CreateCategoryDto;
+
+    return HttpResponse.json<CategoryResponse>(
+      {
+        id: '66666666-6666-4666-8666-666666666666',
+        name: dto.name,
+        type: dto.type,
+        icon: dto.icon ?? null,
+        color: dto.color ?? null,
         createdAt: '2026-01-01T00:00:00.000Z',
         updatedAt: '2026-01-01T00:00:00.000Z',
       },

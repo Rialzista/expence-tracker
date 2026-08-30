@@ -13,6 +13,7 @@ import {
 } from '@expense-tracker/shared';
 
 import { useCategories } from '@/entities/category';
+import { TRANSACTION_TYPE_LABELS } from '@/entities/transaction';
 import { getErrorMessage } from '@/lib/api-client';
 import { Button } from '@/shared/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
@@ -22,11 +23,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useCreateTransaction } from '../model/use-create-transaction';
 
 const NO_CATEGORY = 'none';
-
-const TYPE_LABELS: Record<(typeof TRANSACTION_TYPES)[number], string> = {
-  EXPENSE: 'Расход',
-  INCOME: 'Доход',
-};
 
 /**
  * Отдельная форменная схема, а не createTransactionSchema напрямую: HTML `<input type="date">`
@@ -124,7 +120,7 @@ export function CreateTransactionForm({ onSuccess }: CreateTransactionFormProps)
                 <SelectContent>
                   {TRANSACTION_TYPES.map((value) => (
                     <SelectItem key={value} value={value}>
-                      {TYPE_LABELS[value]}
+                      {TRANSACTION_TYPE_LABELS[value]}
                     </SelectItem>
                   ))}
                 </SelectContent>
