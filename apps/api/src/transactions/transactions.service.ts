@@ -28,11 +28,22 @@ const ZERO = new Prisma.Decimal(0);
  */
 @Injectable()
 export class TransactionsService {
+  /**
+   * @param repository - доступ к операциям в БД
+   * @param queryBus - для обращения к categories через CQRS
+   */
   constructor(
     private readonly repository: TransactionsRepository,
     private readonly queryBus: QueryBus,
   ) {}
 
+  /**
+   * Список операций пользователя с пагинацией и фильтрами.
+   *
+   * @param userId - идентификатор пользователя
+   * @param query - фильтры и параметры страницы
+   * @returns страница операций с общим количеством
+   */
   async findAll(userId: string, query: TransactionQuery): Promise<Paginated<TransactionResponse>> {
     const [transactions, total] = await this.repository.findManyByUser(userId, query);
 
@@ -44,6 +55,14 @@ export class TransactionsService {
     };
   }
 
+  /**
+   * Одна операция по id.
+   *
+   * @param userId - идентификатор пользователя, которому должна принадлежать операция
+   * @param id - идентификатор операции
+   * @returns операция в формате ответа API
+   * @throws {NotFoundException} если операция с таким id не найдена у пользователя
+   */
   async findOne(userId: string, id: string): Promise<TransactionResponse> {
     const transaction = await this.repository.findByIdForUser(id, userId);
     if (!transaction) {
@@ -53,6 +72,14 @@ export class TransactionsService {
     return toTransactionResponse(transaction);
   }
 
+  /**
+   * Создать операцию.
+   *
+   * @param userId - владелец создаваемой операции
+   * @param dto - данные операции
+   * @returns созданная операция
+   * @throws {NotFoundException} если указанная категория не найдена у пользователя
+   */
   async create(userId: string, dto: CreateTransactionDto): Promise<TransactionResponse> {
     await this.assertCategoryBelongsToUser(userId, dto.categoryId);
 
@@ -69,6 +96,15 @@ export class TransactionsService {
     return toTransactionResponse(transaction);
   }
 
+  /**
+   * Обновить операцию.
+   *
+   * @param userId - идентификатор пользователя, которому должна принадлежать операция
+   * @param id - идентификатор обновляемой операции
+   * @param dto - изменяемые поля
+   * @returns обновлённая операция
+   * @throws {NotFoundException} если операция не найдена или указанная категория не найдена у пользователя
+   */
   async update(
     userId: string,
     id: string,
@@ -92,6 +128,14 @@ export class TransactionsService {
     return toTransactionResponse(transaction);
   }
 
+  /**
+   * Удалить операцию.
+   *
+   * @param userId - идентификатор пользователя, которому должна принадлежать операция
+   * @param id - идентификатор удаляемой операции
+   * @returns ничего не возвращает
+   * @throws {NotFoundException} если операция с таким id не найдена у пользователя
+   */
   async remove(userId: string, id: string): Promise<void> {
     const count = await this.repository.remove(id, userId);
     if (count === 0) {
@@ -100,9 +144,15 @@ export class TransactionsService {
   }
 
   /**
-   * Сводка за календарный месяц. Границы считаются в UTC — колонка date
-   * объявлена как Timestamptz(3), и локальная зона процесса не должна
-   * сдвигать месяц.
+   * Сводка за календарный месяц: доход, расход, баланс и разбивка по категориям.
+   *
+   * Границы считаются в UTC — колонка date объявлена как Timestamptz(3), и
+   * локальная зона процесса не должна сдвигать месяц.
+   *
+   * @param userId - идентификатор пользователя
+   * @param month - месяц агрегируемого периода (1-12)
+   * @param year - год агрегируемого периода
+   * @returns сводка за указанный месяц
    */
   async getSummary(
     userId: string,
@@ -140,9 +190,16 @@ export class TransactionsService {
   }
 
   /**
+   * Проверяет, что categoryId (если передан) принадлежит пользователю.
+   *
    * Чужой categoryId не должен доходить до FK: иначе вместо понятной ошибки
    * пользователь получит сырой P2003, а по коду ответа можно будет
    * перебирать существующие категории других пользователей.
+   *
+   * @param userId - идентификатор пользователя
+   * @param categoryId - проверяемый идентификатор категории; `null`/`undefined` пропускается без проверки
+   * @returns ничего не возвращает
+   * @throws {NotFoundException} если категория с таким id не найдена у пользователя
    */
   private async assertCategoryBelongsToUser(
     userId: string,

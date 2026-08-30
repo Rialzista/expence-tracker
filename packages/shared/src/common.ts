@@ -21,6 +21,7 @@ export const paginationQuerySchema = z.object({
 
 export type PaginationQuery = z.infer<typeof paginationQuerySchema>;
 
+/** Страница элементов списочного эндпоинта вместе с общим количеством по фильтрам. */
 export interface Paginated<T> {
   items: T[];
   total: number;

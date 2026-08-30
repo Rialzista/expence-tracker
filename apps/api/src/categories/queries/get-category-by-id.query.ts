@@ -7,6 +7,10 @@ import type { CategoryResponse } from '@expense-tracker/shared';
  * categoryId», и сообщение об ошибке там своё.
  */
 export class GetCategoryByIdQuery extends Query<CategoryResponse | null> {
+  /**
+   * @param userId - идентификатор пользователя, которому должна принадлежать категория
+   * @param id - идентификатор категории
+   */
   constructor(
     readonly userId: string,
     readonly id: string,

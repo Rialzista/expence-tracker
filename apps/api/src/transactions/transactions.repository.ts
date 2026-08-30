@@ -27,11 +27,18 @@ export interface CategoryTotal {
  */
 @Injectable()
 export class TransactionsRepository {
+  /** @param prisma - клиент Prisma для доступа к БД */
   constructor(private readonly prisma: PrismaService) {}
 
   /**
+   * Страница операций пользователя и их общее количество.
+   *
    * Список и общее количество считаются в одной транзакции — иначе между
    * findMany и count может вклиниться запись, и total не сойдётся со страницей.
+   *
+   * @param userId - идентификатор пользователя
+   * @param query - фильтры и параметры страницы
+   * @returns кортеж [операции текущей страницы, общее количество по фильтрам]
    */
   findManyByUser(userId: string, query: TransactionQuery): Promise<[Transaction[], number]> {
     const where = this.buildWhere(userId, query);
@@ -47,10 +54,23 @@ export class TransactionsRepository {
     ]);
   }
 
+  /**
+   * Одна операция по id в границах пользователя.
+   *
+   * @param id - идентификатор операции
+   * @param userId - идентификатор пользователя-владельца
+   * @returns операция или `null`, если не найдена у этого пользователя
+   */
   findByIdForUser(id: string, userId: string): Promise<Transaction | null> {
     return this.prisma.transaction.findFirst({ where: { id, userId } });
   }
 
+  /**
+   * Создать операцию.
+   *
+   * @param data - поля новой операции
+   * @returns созданная операция
+   */
   create(data: {
     userId: string;
     amount: string;
@@ -63,6 +83,13 @@ export class TransactionsRepository {
     return this.prisma.transaction.create({ data });
   }
 
+  /**
+   * Обновить операцию по id.
+   *
+   * @param id - идентификатор операции
+   * @param data - изменяемые поля
+   * @returns обновлённая операция
+   */
   update(
     id: string,
     data: {
@@ -77,12 +104,26 @@ export class TransactionsRepository {
     return this.prisma.transaction.update({ where: { id }, data });
   }
 
+  /**
+   * Удалить операцию в границах пользователя.
+   *
+   * @param id - идентификатор операции
+   * @param userId - идентификатор пользователя-владельца
+   * @returns количество удалённых строк (0 или 1)
+   */
   async remove(id: string, userId: string): Promise<number> {
     const result = await this.prisma.transaction.deleteMany({ where: { id, userId } });
     return result.count;
   }
 
-  /** Суммы за период по типу операции — доход и расход. */
+  /**
+   * Суммы за период по типу операции — доход и расход.
+   *
+   * @param userId - идентификатор пользователя
+   * @param from - начало периода включительно
+   * @param to - конец периода исключительно
+   * @returns суммы, сгруппированные по типу операции
+   */
   async sumByType(userId: string, from: Date, to: Date): Promise<TypeTotal[]> {
     const rows = await this.prisma.transaction.groupBy({
       by: ['type'],
@@ -97,6 +138,11 @@ export class TransactionsRepository {
    * Суммы за период в разрезе категории и типа. Названия категорий здесь
    * не добираются: категории — чужой модуль, их список TransactionsService
    * берёт через GetCategoriesQuery.
+   *
+   * @param userId - идентификатор пользователя
+   * @param from - начало периода включительно
+   * @param to - конец периода исключительно
+   * @returns суммы, сгруппированные по категории и типу операции
    */
   async sumByCategory(userId: string, from: Date, to: Date): Promise<CategoryTotal[]> {
     const rows = await this.prisma.transaction.groupBy({
@@ -112,6 +158,13 @@ export class TransactionsRepository {
     }));
   }
 
+  /**
+   * Собирает условие Prisma `where` для списка операций из фильтров запроса.
+   *
+   * @param userId - идентификатор пользователя
+   * @param query - фильтры периода, типа и категории
+   * @returns условие `where` для `transaction.findMany`/`count`
+   */
   private buildWhere(userId: string, query: TransactionQuery): Prisma.TransactionWhereInput {
     const { from, to, type, categoryId } = query;
 
@@ -130,7 +183,16 @@ export class TransactionsRepository {
     };
   }
 
-  /** Полуинтервал [from, to): верхняя граница месяца — первое число следующего. */
+  /**
+   * Собирает условие Prisma `where` для агрегации за период.
+   *
+   * Полуинтервал [from, to): верхняя граница месяца — первое число следующего.
+   *
+   * @param userId - идентификатор пользователя
+   * @param from - начало периода включительно
+   * @param to - конец периода исключительно
+   * @returns условие `where` для `transaction.groupBy`
+   */
   private buildPeriodWhere(userId: string, from: Date, to: Date): Prisma.TransactionWhereInput {
     return { userId, date: { gte: from, lt: to } };
   }

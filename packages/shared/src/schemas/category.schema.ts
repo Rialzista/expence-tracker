@@ -38,4 +38,5 @@ export const categoryResponseSchema = z.object({
 
 export type CreateCategoryDto = z.infer<typeof createCategorySchema>;
 export type UpdateCategoryDto = z.infer<typeof updateCategorySchema>;
+/** Формат категории в ответах API. */
 export type CategoryResponse = z.infer<typeof categoryResponseSchema>;

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { idSchema, moneySchema, paginationQuerySchema } from '../common.js';
 import { SUPPORTED_CURRENCIES, currencySchema, transactionTypeSchema } from '../enums.js';
 
+/** Тело запроса на создание операции. */
 export const createTransactionSchema = z.object({
   amount: moneySchema,
   currency: currencySchema,
@@ -32,6 +33,7 @@ export const updateTransactionSchema = z
   })
   .refine((dto) => Object.keys(dto).length > 0, 'Нужно передать хотя бы одно поле');
 
+/** Формат операции в ответах API. */
 export const transactionResponseSchema = z.object({
   id: idSchema,
   amount: z.string(),

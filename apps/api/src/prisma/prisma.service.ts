@@ -9,19 +9,33 @@ import { PrismaClient } from '../generated/prisma/client.js';
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PrismaService.name);
 
-  // Prisma 7 больше не читает url из схемы — рантайм-клиент подключается
-  // через драйвер-адаптер, а не строку в datasource.
+  /**
+   * Prisma 7 больше не читает url из схемы — рантайм-клиент подключается
+   * через драйвер-адаптер, а не строку в datasource.
+   *
+   * @param config - конфиг приложения, источник DATABASE_URL
+   */
   constructor(config: ConfigService<Env, true>) {
     super({
       adapter: new PrismaPg({ connectionString: config.get('DATABASE_URL', { infer: true }) }),
     });
   }
 
+  /**
+   * Открывает соединение с БД при старте модуля.
+   *
+   * @returns ничего не возвращает
+   */
   async onModuleInit(): Promise<void> {
     await this.$connect();
     this.logger.log('Подключение к PostgreSQL установлено');
   }
 
+  /**
+   * Закрывает соединение с БД при остановке модуля.
+   *
+   * @returns ничего не возвращает
+   */
   async onModuleDestroy(): Promise<void> {
     await this.$disconnect();
   }

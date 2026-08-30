@@ -6,8 +6,15 @@ import { GetTransactionsSummaryQuery } from './get-transactions-summary.query.js
 
 @QueryHandler(GetTransactionsSummaryQuery)
 export class GetTransactionsSummaryHandler implements IQueryHandler<GetTransactionsSummaryQuery> {
+  /** @param transactions - доменный сервис операций */
   constructor(private readonly transactions: TransactionsService) {}
 
+  /**
+   * Выполняет GetTransactionsSummaryQuery.
+   *
+   * @param query - запрос с month/year агрегируемого периода
+   * @returns сводка за указанный месяц
+   */
   execute(query: GetTransactionsSummaryQuery): Promise<TransactionSummary> {
     return this.transactions.getSummary(query.userId, query.period);
   }
