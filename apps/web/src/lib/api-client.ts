@@ -1,5 +1,7 @@
 import type { ApiError } from '@expense-tracker/shared';
 
+import { useSessionStore } from '@/entities/session';
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
 
 export class ApiRequestError extends Error {
@@ -16,18 +18,32 @@ export class ApiRequestError extends Error {
 /**
  * Тонкая обёртка над fetch: axios здесь не нужен — нативный fetch в Next
  * умеет кешироваться и работает и в Server, и в Client Components.
+ *
+ * Токен читается через `useSessionStore.getState()` (не хук), т.к. это синхронный
+ * доступ вне React-дерева. Стор персистится в localStorage — в Server Components
+ * его ещё нет, поэтому там accessToken всегда null. Для этой задачи не критично:
+ * защищённые данные грузятся из клиентских компонентов через TanStack Query.
  */
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  const { accessToken } = useSessionStore.getState();
+
   const response = await fetch(`${BASE_URL}${path}`, {
     ...init,
     headers: {
       'Content-Type': 'application/json',
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       ...init?.headers,
     },
   });
 
   if (!response.ok) {
     const body = (await response.json().catch(() => null)) as ApiError | null;
+
+    // Access-токен истёк или невалиден (без refresh-flow восстановить его нечем) —
+    // сбрасываем сессию, чтобы UI сразу переключился на анонимное состояние.
+    if (response.status === 401) {
+      useSessionStore.getState().clearSession();
+    }
 
     throw new ApiRequestError(
       response.status,
@@ -42,6 +58,11 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
   }
 
   return (await response.json()) as T;
+}
+
+/** Текст ошибки для UI: сообщение бэкенда из ApiRequestError, иначе — fallback. */
+export function getErrorMessage(error: unknown, fallback: string): string {
+  return error instanceof ApiRequestError ? error.message : fallback;
 }
 
 export const api = {

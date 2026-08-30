@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { loginSchema, type LoginDto } from '@expense-tracker/shared';
 
 import { useSessionStore } from '@/entities/session';
-import { ApiRequestError } from '@/lib/api-client';
+import { getErrorMessage } from '@/lib/api-client';
 import { Button } from '@/shared/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
@@ -28,10 +28,10 @@ export function LoginForm() {
     try {
       const data = await login.mutateAsync(dto);
       setSession(data);
-      router.push('/transactions');
+      router.push('/');
     } catch (error) {
       form.setError('root', {
-        message: error instanceof ApiRequestError ? error.message : 'Не удалось выполнить вход',
+        message: getErrorMessage(error, 'Не удалось выполнить вход'),
       });
     }
   };

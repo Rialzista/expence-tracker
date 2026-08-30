@@ -60,7 +60,7 @@ describe('LoginForm', () => {
     await user.type(screen.getByLabelText('Пароль'), 'password123');
     await user.click(screen.getByRole('button', { name: 'Войти' }));
 
-    await waitFor(() => expect(pushMock).toHaveBeenCalledWith('/transactions'));
+    await waitFor(() => expect(pushMock).toHaveBeenCalledWith('/'));
     expect(useSessionStore.getState().accessToken).toBe('test-token');
   });
 

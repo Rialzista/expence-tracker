@@ -82,7 +82,7 @@ describe('RegisterForm', () => {
     await fillValidForm(user);
     await user.click(screen.getByRole('button', { name: 'Зарегистрироваться' }));
 
-    await waitFor(() => expect(pushMock).toHaveBeenCalledWith('/transactions'));
+    await waitFor(() => expect(pushMock).toHaveBeenCalledWith('/'));
     expect(useSessionStore.getState().accessToken).toBe('test-token');
   });
 
