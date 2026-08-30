@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { registerSchema } from '@expense-tracker/shared';
 
 import { useSessionStore } from '@/entities/session';
-import { ApiRequestError } from '@/lib/api-client';
+import { getErrorMessage } from '@/lib/api-client';
 import { Button } from '@/shared/ui/button';
 import { Checkbox } from '@/shared/ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
@@ -39,10 +39,10 @@ export function RegisterForm() {
     try {
       const data = await register.mutateAsync(dto);
       setSession(data);
-      router.push('/transactions');
+      router.push('/');
     } catch (error) {
       form.setError('root', {
-        message: error instanceof ApiRequestError ? error.message : 'Не удалось выполнить регистрацию',
+        message: getErrorMessage(error, 'Не удалось выполнить регистрацию'),
       });
     }
   };
