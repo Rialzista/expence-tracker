@@ -27,6 +27,13 @@ describe('TransactionsList', () => {
     expect(screen.getAllByText(/Продукты/).length).toBeGreaterThan(0);
   });
 
+  it('рендерит меню действий для каждой операции', async () => {
+    renderTransactionsList();
+
+    await screen.findByText('Операция 1');
+    expect(screen.getAllByRole('button', { name: 'Действия с операцией' }).length).toBeGreaterThan(0);
+  });
+
   it('пагинация: «Назад» задизейблена на первой странице, «Вперёд» — грузит вторую', async () => {
     const user = userEvent.setup();
     renderTransactionsList();

@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { TransactionResponse } from '@expense-tracker/shared';
 
 import { cn } from '@/lib/utils';
@@ -7,9 +9,10 @@ import { formatTransactionAmount, formatTransactionDate } from '../lib/format-tr
 interface TransactionRowProps {
   transaction: TransactionResponse;
   categoryName: string | null;
+  actions?: ReactNode;
 }
 
-export function TransactionRow({ transaction, categoryName }: TransactionRowProps) {
+export function TransactionRow({ transaction, categoryName, actions }: TransactionRowProps) {
   const { type, amount, currency, date, note } = transaction;
 
   return (
@@ -21,14 +24,14 @@ export function TransactionRow({ transaction, categoryName }: TransactionRowProp
           {categoryName ? ` · ${categoryName}` : ''}
         </span>
       </div>
-      <span
-        className={cn(
-          'shrink-0 font-mono text-sm font-semibold',
-          type === 'INCOME' ? 'text-green-600' : 'text-red-600',
-        )}
-      >
-        {formatTransactionAmount(amount, type, currency)}
-      </span>
+      <div className="flex shrink-0 items-center gap-2">
+        <span
+          className={cn('font-mono text-sm font-semibold', type === 'INCOME' ? 'text-green-600' : 'text-red-600')}
+        >
+          {formatTransactionAmount(amount, type, currency)}
+        </span>
+        {actions}
+      </div>
     </div>
   );
 }

@@ -28,6 +28,13 @@ describe('CategoriesList', () => {
     expect(screen.getByText('Доходы')).toBeInTheDocument();
   });
 
+  it('рендерит меню действий для каждой категории', async () => {
+    renderCategoriesList();
+
+    expect(await screen.findByRole('button', { name: 'Действия с категорией «Продукты»' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Действия с категорией «Зарплата»' })).toBeInTheDocument();
+  });
+
   it('показывает сообщение о пустом списке', async () => {
     server.use(http.get(`${BASE_URL}/categories`, () => HttpResponse.json([])));
     renderCategoriesList();
