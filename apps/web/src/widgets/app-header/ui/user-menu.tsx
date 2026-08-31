@@ -35,7 +35,10 @@ export function UserMenu() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="rounded-full outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50">
+      <DropdownMenuTrigger
+        data-testid="user-menu-trigger"
+        className="rounded-full outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+      >
         <Avatar>
           <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
         </Avatar>

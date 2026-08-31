@@ -26,17 +26,11 @@ afterEach(() => {
 });
 
 describe('AppHeader', () => {
-  it('подсвечивает активную ссылку по текущему pathname', () => {
-    render(<AppHeader />);
-
-    expect(screen.getByRole('link', { name: 'Транзакции' })).toHaveAttribute('aria-current', 'page');
-    expect(screen.getByRole('link', { name: 'Категории' })).not.toHaveAttribute('aria-current');
-  });
-
   it('не показывает профиль, если пользователь не залогинен', () => {
     render(<AppHeader />);
 
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Войти' })).toBeInTheDocument();
+    expect(screen.queryByTestId('user-menu-trigger')).not.toBeInTheDocument();
   });
 
   it('показывает имя и email пользователя в меню профиля', async () => {
@@ -44,7 +38,7 @@ describe('AppHeader', () => {
     const user = userEvent.setup();
     render(<AppHeader />);
 
-    await user.click(screen.getByRole('button'));
+    await user.click(screen.getByTestId('user-menu-trigger'));
 
     expect(await screen.findByText('Demo User')).toBeInTheDocument();
     expect(screen.getByText('demo@example.com')).toBeInTheDocument();
@@ -55,7 +49,7 @@ describe('AppHeader', () => {
     const user = userEvent.setup();
     render(<AppHeader />);
 
-    await user.click(screen.getByRole('button'));
+    await user.click(screen.getByTestId('user-menu-trigger'));
     await user.click(await screen.findByText('Выйти'));
 
     expect(pushMock).toHaveBeenCalledWith('/login');

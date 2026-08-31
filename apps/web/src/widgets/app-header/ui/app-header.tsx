@@ -1,18 +1,29 @@
-import Link from 'next/link';
+import { Bell, Search, Settings } from 'lucide-react';
 
-import { NavLinks } from './nav-links';
+import { Input } from '@/shared/ui/input';
+
 import { UserMenu } from './user-menu';
 
 export function AppHeader() {
   return (
-    <header className="border-b border-border">
-      <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-6 py-3">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="text-sm font-semibold">
-            Трекер расходов
-          </Link>
-          <NavLinks />
-        </div>
+    <header className="flex items-center justify-between gap-4 px-4 py-6 sm:px-8">
+      <div className="relative hidden w-full max-w-sm sm:block">
+        <Search className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground" />
+        <Input placeholder="Поиск операций…" className="rounded-full bg-card pl-11" />
+      </div>
+      <div className="ml-auto flex items-center gap-3">
+        <button
+          type="button"
+          className="flex size-9 items-center justify-center rounded-full bg-card text-muted-foreground hover:text-foreground"
+        >
+          <Bell className="size-4" />
+        </button>
+        <button
+          type="button"
+          className="flex size-9 items-center justify-center rounded-full bg-card text-muted-foreground hover:text-foreground"
+        >
+          <Settings className="size-4" />
+        </button>
         <UserMenu />
       </div>
     </header>
