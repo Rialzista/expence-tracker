@@ -1,6 +1,15 @@
 packages:
   - "apps/*"
   - "packages/*"
+packageExtensions:
+  # eslint-config-next не объявляет next зависимостью в своём package.json,
+  # хотя парсер (dist/parser.js) требует next/dist/compiled/babel/eslint-parser
+  # в рантайме — под npm/yarn это прощает плоский hoisting, под строгим
+  # node_modules pnpm require() не может найти next и `pnpm lint` падает
+  # с MODULE_NOT_FOUND. Версия совпадает с той, что в apps/web/package.json.
+  eslint-config-next:
+    dependencies:
+      next: 16.3.3
 allowBuilds:
   '@prisma/engines': true
   # Телеметрия Scarf, тянется транзитивно через swagger-ui-dist —
