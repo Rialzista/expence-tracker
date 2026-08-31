@@ -29,7 +29,7 @@ export function TransactionsList() {
 
   if (transactions.isPending) {
     return (
-      <div className="mt-6 space-y-3">
+      <div className="space-y-3 rounded-3xl bg-card p-6">
         {Array.from({ length: 5 }, (_, index) => (
           <Skeleton key={index} className="h-12 w-full" />
         ))}
@@ -39,7 +39,7 @@ export function TransactionsList() {
 
   if (transactions.isError) {
     return (
-      <p className="mt-6 text-sm text-destructive">
+      <p className="rounded-3xl bg-card p-6 text-sm text-destructive">
         {getErrorMessage(transactions.error, 'Не удалось загрузить операции')}
       </p>
     );
@@ -49,11 +49,11 @@ export function TransactionsList() {
   const totalPages = Math.max(1, Math.ceil(total / LIMIT));
 
   if (items.length === 0) {
-    return <p className="mt-6 text-sm text-muted-foreground">Транзакций пока нет.</p>;
+    return <p className="rounded-3xl bg-card p-6 text-sm text-muted-foreground">Транзакций пока нет.</p>;
   }
 
   return (
-    <div className="mt-6">
+    <div className="rounded-3xl bg-card p-6">
       <div className={transactions.isPlaceholderData ? 'opacity-60' : undefined}>
         {items.map((transaction) => (
           <TransactionRow

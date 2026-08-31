@@ -11,7 +11,7 @@ export function CategoriesList() {
 
   if (categories.isPending) {
     return (
-      <div className="mt-6 space-y-3">
+      <div className="space-y-3 rounded-3xl bg-card p-6">
         {Array.from({ length: 4 }, (_, index) => (
           <Skeleton key={index} className="h-12 w-full" />
         ))}
@@ -21,7 +21,7 @@ export function CategoriesList() {
 
   if (categories.isError) {
     return (
-      <p className="mt-6 text-sm text-destructive">
+      <p className="rounded-3xl bg-card p-6 text-sm text-destructive">
         {getErrorMessage(categories.error, 'Не удалось загрузить категории')}
       </p>
     );
@@ -30,16 +30,16 @@ export function CategoriesList() {
   const items = categories.data;
 
   if (items.length === 0) {
-    return <p className="mt-6 text-sm text-muted-foreground">Категорий пока нет.</p>;
+    return <p className="rounded-3xl bg-card p-6 text-sm text-muted-foreground">Категорий пока нет.</p>;
   }
 
   const expense = items.filter((category) => category.type === 'EXPENSE');
   const income = items.filter((category) => category.type === 'INCOME');
 
   return (
-    <div className="mt-6 space-y-6">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       {expense.length > 0 ? (
-        <section>
+        <section className="rounded-3xl bg-card p-6">
           <h2 className="text-sm font-semibold text-muted-foreground">Расходы</h2>
           <div className="mt-2">
             {expense.map((category) => (
@@ -53,7 +53,7 @@ export function CategoriesList() {
         </section>
       ) : null}
       {income.length > 0 ? (
-        <section>
+        <section className="rounded-3xl bg-card p-6">
           <h2 className="text-sm font-semibold text-muted-foreground">Доходы</h2>
           <div className="mt-2">
             {income.map((category) => (

@@ -3,15 +3,15 @@ import { CategoriesList } from '@/widgets/categories-list';
 
 export default function Page() {
   return (
-    <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-10">
-      <div className="flex items-center justify-between">
+    <div className="flex-1 space-y-6 pt-2">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Категории</h1>
-          <p className="mt-2 text-sm opacity-70">Справочник категорий доходов и расходов.</p>
+          <h1 className="text-3xl font-extrabold text-foreground">Категории</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Справочник категорий доходов и расходов.</p>
         </div>
         <CreateCategoryDialog />
       </div>
       <CategoriesList />
-    </main>
+    </div>
   );
 }

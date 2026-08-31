@@ -1,8 +1,12 @@
 export { transactionKeys } from './model/query-keys';
 export { useTransactions } from './model/use-transactions';
+export { useTransactionsSummary } from './model/use-transactions-summary';
 export { NO_CATEGORY, transactionFormSchema, type TransactionFormValues } from './model/transaction-form-schema';
 export { formatTransactionAmount, formatTransactionDate } from './lib/format-transaction';
+export { formatMoney } from './lib/format-money';
 export { TRANSACTION_TYPE_LABELS } from './lib/transaction-type-labels';
 export { todayDateInputValue, dateInputValueFromIso } from './lib/transaction-date';
 export { TransactionRow } from './ui/transaction-row';
 export { TransactionFormFields } from './ui/transaction-form-fields';
+export { CategoryDonutChart, type CategoryDonutSlice } from './ui/category-donut-chart';
+export { MonthPicker } from './ui/month-picker';
