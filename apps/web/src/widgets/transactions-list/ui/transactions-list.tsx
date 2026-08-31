@@ -9,6 +9,8 @@ import { getErrorMessage } from '@/lib/api-client';
 import { Button } from '@/shared/ui/button';
 import { Skeleton } from '@/shared/ui/skeleton';
 
+import { TransactionRowActions } from './transaction-row-actions';
+
 const LIMIT = 10;
 
 export function TransactionsList() {
@@ -58,6 +60,7 @@ export function TransactionsList() {
             key={transaction.id}
             transaction={transaction}
             categoryName={transaction.categoryId ? (categoryNameById.get(transaction.categoryId) ?? null) : null}
+            actions={<TransactionRowActions transaction={transaction} />}
           />
         ))}
       </div>

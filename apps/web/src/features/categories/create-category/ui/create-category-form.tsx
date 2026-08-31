@@ -3,15 +3,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-import { TRANSACTION_TYPES, createCategorySchema, type CreateCategoryDto } from '@expense-tracker/shared';
+import { createCategorySchema, type CreateCategoryDto } from '@expense-tracker/shared';
 
-import { ColorPicker, DEFAULT_CATEGORY_COLOR, DEFAULT_CATEGORY_ICON, IconPicker } from '@/entities/category';
-import { TRANSACTION_TYPE_LABELS } from '@/entities/transaction';
+import { CategoryFormFields, DEFAULT_CATEGORY_COLOR, DEFAULT_CATEGORY_ICON } from '@/entities/category';
 import { getErrorMessage } from '@/lib/api-client';
 import { Button } from '@/shared/ui/button';
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/shared/ui/form';
-import { Input } from '@/shared/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
+import { Form } from '@/shared/ui/form';
 
 import { useCreateCategory } from '../model/use-create-category';
 
@@ -47,69 +44,7 @@ export function CreateCategoryForm({ onSuccess }: CreateCategoryFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" noValidate>
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Название</FormLabel>
-              <FormControl>
-                <Input placeholder="Например, Продукты" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Тип</FormLabel>
-              <Select value={field.value} onValueChange={field.onChange}>
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {TRANSACTION_TYPES.map((value) => (
-                    <SelectItem key={value} value={value}>
-                      {TRANSACTION_TYPE_LABELS[value]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="color"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Цвет</FormLabel>
-              <FormControl>
-                <ColorPicker value={field.value ?? DEFAULT_CATEGORY_COLOR} onChange={field.onChange} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="icon"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Иконка</FormLabel>
-              <FormControl>
-                <IconPicker value={field.value ?? DEFAULT_CATEGORY_ICON} onChange={field.onChange} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <CategoryFormFields control={form.control} />
         {form.formState.errors.root ? (
           <p className="text-sm text-destructive">{form.formState.errors.root.message}</p>
         ) : null}

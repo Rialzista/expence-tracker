@@ -4,6 +4,8 @@ import { CategoryRow, useCategories } from '@/entities/category';
 import { getErrorMessage } from '@/lib/api-client';
 import { Skeleton } from '@/shared/ui/skeleton';
 
+import { CategoryRowActions } from './category-row-actions';
+
 export function CategoriesList() {
   const categories = useCategories();
 
@@ -41,7 +43,11 @@ export function CategoriesList() {
           <h2 className="text-sm font-semibold text-muted-foreground">Расходы</h2>
           <div className="mt-2">
             {expense.map((category) => (
-              <CategoryRow key={category.id} category={category} />
+              <CategoryRow
+                key={category.id}
+                category={category}
+                actions={<CategoryRowActions category={category} />}
+              />
             ))}
           </div>
         </section>
@@ -51,7 +57,11 @@ export function CategoriesList() {
           <h2 className="text-sm font-semibold text-muted-foreground">Доходы</h2>
           <div className="mt-2">
             {income.map((category) => (
-              <CategoryRow key={category.id} category={category} />
+              <CategoryRow
+                key={category.id}
+                category={category}
+                actions={<CategoryRowActions category={category} />}
+              />
             ))}
           </div>
         </section>

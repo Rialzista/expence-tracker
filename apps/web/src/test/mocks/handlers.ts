@@ -7,6 +7,8 @@ import type {
   CreateTransactionDto,
   Paginated,
   TransactionResponse,
+  UpdateCategoryDto,
+  UpdateTransactionDto,
 } from '@expense-tracker/shared';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
@@ -103,6 +105,46 @@ export const handlers = [
       },
       { status: 201 },
     );
+  }),
+  http.patch(`${BASE_URL}/categories/:id`, async ({ params, request }) => {
+    const category = testCategories.find((item) => item.id === params.id);
+
+    if (!category) {
+      return HttpResponse.json({ statusCode: 404, message: 'Категория не найдена' }, { status: 404 });
+    }
+
+    const dto = (await request.json()) as UpdateCategoryDto;
+
+    return HttpResponse.json<CategoryResponse>({ ...category, ...dto });
+  }),
+  http.delete(`${BASE_URL}/categories/:id`, ({ params }) => {
+    const category = testCategories.find((item) => item.id === params.id);
+
+    if (!category) {
+      return HttpResponse.json({ statusCode: 404, message: 'Категория не найдена' }, { status: 404 });
+    }
+
+    return new HttpResponse(null, { status: 204 });
+  }),
+  http.patch(`${BASE_URL}/transactions/:id`, async ({ params, request }) => {
+    const transaction = testTransactions.find((item) => item.id === params.id);
+
+    if (!transaction) {
+      return HttpResponse.json({ statusCode: 404, message: 'Операция не найдена' }, { status: 404 });
+    }
+
+    const dto = (await request.json()) as UpdateTransactionDto;
+
+    return HttpResponse.json<TransactionResponse>({ ...transaction, ...dto });
+  }),
+  http.delete(`${BASE_URL}/transactions/:id`, ({ params }) => {
+    const transaction = testTransactions.find((item) => item.id === params.id);
+
+    if (!transaction) {
+      return HttpResponse.json({ statusCode: 404, message: 'Операция не найдена' }, { status: 404 });
+    }
+
+    return new HttpResponse(null, { status: 204 });
   }),
   http.post(`${BASE_URL}/auth/login`, () =>
     HttpResponse.json<AuthResponse>({ accessToken: 'test-token', user: testUser }),

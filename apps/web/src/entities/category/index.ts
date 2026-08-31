@@ -5,3 +5,4 @@ export { CATEGORY_ICON_OPTIONS, DEFAULT_CATEGORY_ICON, getCategoryIcon } from '.
 export { ColorPicker } from './ui/color-picker';
 export { IconPicker } from './ui/icon-picker';
 export { CategoryRow } from './ui/category-row';
+export { CategoryFormFields } from './ui/category-form-fields';
