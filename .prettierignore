@@ -1,0 +1,25 @@
+# Зависимости
+node_modules/
+.pnpm-store/
+
+# Сборка
+dist/
+build/
+.next/
+out/
+
+# Turborepo
+.turbo/
+
+# Тесты
+coverage/
+
+# Prisma — сгенерированный клиент
+apps/api/src/generated/
+
+# Lock-файлы
+pnpm-lock.yaml
+
+# Учебные планы — не часть приложения
+react-leveling-plan/
+dotnet-core-plan/
