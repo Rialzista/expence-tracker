@@ -41,7 +41,7 @@ function buildOptions() {
 }
 
 export function MonthPicker({ month, year, onChange }: MonthPickerProps) {
-  const options = useMemo(buildOptions, []);
+  const options = useMemo(() => buildOptions(), []);
 
   return (
     <Select
