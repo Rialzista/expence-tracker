@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import type { TransactionResponse } from '@expense-tracker/shared';
 
@@ -24,27 +24,32 @@ interface DeleteTransactionDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function DeleteTransactionDialog({ transaction, open, onOpenChange }: DeleteTransactionDialogProps) {
+export function DeleteTransactionDialog({
+  transaction,
+  open,
+  onOpenChange,
+}: DeleteTransactionDialogProps) {
   const deleteTransaction = useDeleteTransaction();
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!open) {
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
       setError(null);
     }
-  }, [open]);
+    onOpenChange(nextOpen);
+  };
 
   const handleDelete = async () => {
     try {
       await deleteTransaction.mutateAsync(transaction.id);
-      onOpenChange(false);
+      handleOpenChange(false);
     } catch (deleteError) {
       setError(getErrorMessage(deleteError, 'Не удалось удалить операцию'));
     }
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog open={open} onOpenChange={handleOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Удалить операцию?</AlertDialogTitle>
