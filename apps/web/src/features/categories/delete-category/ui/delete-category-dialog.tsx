@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import type { CategoryResponse } from '@expense-tracker/shared';
 
@@ -28,23 +28,24 @@ export function DeleteCategoryDialog({ category, open, onOpenChange }: DeleteCat
   const deleteCategory = useDeleteCategory();
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!open) {
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
       setError(null);
     }
-  }, [open]);
+    onOpenChange(nextOpen);
+  };
 
   const handleDelete = async () => {
     try {
       await deleteCategory.mutateAsync(category.id);
-      onOpenChange(false);
+      handleOpenChange(false);
     } catch (deleteError) {
       setError(getErrorMessage(deleteError, 'Не удалось удалить категорию'));
     }
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog open={open} onOpenChange={handleOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Удалить категорию «{category.name}»?</AlertDialogTitle>
