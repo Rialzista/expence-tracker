@@ -34,17 +34,18 @@ shadcn/ui настроен (`components.json`, `src/lib/utils.ts` с хелпе�
 
 Функционал логина/регистрации (`entities/session`, `features/auth/login`,
 `features/auth/register`, `shared/ui`) в `apps/web/src` написан по Feature-Sliced Design —
-это первый FSD-код в проекте; главный экран (дашборд) продолжает эту же архитектуру
+это первый FSD-код в проекте; главный экран (дашборд) и страницы
+`(dashboard)/transactions|categories|stats` продолжают эту же архитектуру
 (`entities/transaction`, `entities/category`, `features/auth/logout`,
-`features/transactions/create-transaction`, `widgets/app-header`,
-`widgets/transactions-list`). Остальной существующий код
-(`src/lib/*`, `src/stores/ui-store.ts`, страницы `(dashboard)/transactions|categories|stats`)
+`features/transactions/*`, `features/categories/*`, `widgets/app-header`,
+`widgets/app-sidebar`, `widgets/dashboard-summary`, `widgets/transactions-list`,
+`widgets/categories-list`, `widgets/stats-overview`). Остальной существующий код
+(`src/lib/*`, `src/stores/ui-store.ts`)
 FSD-слоями не является и **умышленно не мигрирован** — временное сосуществование двух
 подходов, осознанный технический долг, а не недосмотр. При следующей доработке фронтенда
 стоит постепенно перевести остальное на те же слои (`src/lib/api-client.ts`/`query-client.ts`
-→ кандидаты в `shared/api`, `src/lib/utils.ts` → `shared/lib`, `src/stores/ui-store.ts` и
-оставшиеся страницы `(dashboard)/*` — в `entities`/`features`/`widgets` по мере появления
-там реальной доменной логики).
+→ кандидаты в `shared/api`, `src/lib/utils.ts` → `shared/lib`, `src/stores/ui-store.ts` —
+в `entities`/`features`/`widgets` по мере появления там реальной доменной логики).
 
 Расположение нового кода:
 
@@ -65,15 +66,18 @@ FSD-слоями не является и **умышленно не мигрир
   для `logout`) и `ui/` (форма или, для `logout`, пункт `DropdownMenuItem`).
 - `features/transactions/create-transaction` — диалог добавления операции с главного
   экрана: `model/use-create-transaction.ts` (`useMutation`, инвалидирует
-  `transactionKeys` при успехе), `ui/create-transaction-form.tsx` (своя Zod-схема формы,
-  не `createTransactionSchema` напрямую — `<input type="date">` отдаёт `YYYY-MM-DD`, а
-  не полный ISO 8601; `categoryId` — сентинел `NO_CATEGORY` для пункта «Без категории»),
+  `transactionKeys` при успехе), `ui/create-transaction-form.tsx` (форменная Zod-схема
+  `transactionFormSchema` из `entities/transaction/model/transaction-form-schema.ts`, общая
+  с формой редактирования, не `createTransactionSchema` напрямую — `<input type="date">`
+  отдаёт `YYYY-MM-DD`, а не полный ISO 8601; `categoryId` — сентинел `NO_CATEGORY`
+  для пункта «Без категории»),
   `ui/create-transaction-dialog.tsx` (обёртка формы в `shared/ui/dialog`).
-- `widgets/app-header` — навигация (`ui/nav-links.tsx`, `usePathname` для подсветки
-  активного пункта) + меню профиля (`ui/user-menu.tsx`, аватар-инициалы +
+- `widgets/app-header` — поиск и меню профиля (`ui/user-menu.tsx`, аватар-инициалы +
   `LogoutMenuItem` из `features/auth/logout`); подключается один раз в
   `app/(dashboard)/layout.tsx`, общий для всех роутов группы.
-- `widgets/transactions-list` — список транзакций на главном экране: пагинация —
+- `widgets/app-sidebar` — навигация (`ui/sidebar-nav-links.tsx`, `usePathname` для
+  подсветки активного пункта); подключается там же, в `app/(dashboard)/layout.tsx`.
+- `widgets/transactions-list` — список транзакций на странице `/transactions`: пагинация —
   локальный `useState` (не Zustand и не URL — состояние используется только этим
   виджетом), `limit` фиксирован на `10` (бэкенд по умолчанию отдаёт `20`).
 - `shared/ui` — примитивы shadcn/ui. `components.json#aliases.ui` указывает на

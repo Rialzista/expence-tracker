@@ -7,9 +7,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Монорепозиторий трекера расходов: Next.js на фронтенде, NestJS + Prisma + PostgreSQL на бэкенде,
 общие Zod-контракты между ними. pnpm workspaces + Turborepo.
 
-Сейчас это заготовка: структура, конфигурация и заглушки модулей проведены до конца,
-но доменная логика (`categories`, `transactions`) и авторизация не реализованы —
-методы сервисов бросают `NotFoundException`/`NotImplementedException`.
+Доменная логика и авторизация реализованы: на бэкенде — регистрация и вход по JWT,
+CRUD категорий и операций и месячная сводка (модули общаются через CQRS); на фронтенде —
+вход/регистрация, дашборд и страницы операций, категорий и статистики.
 
 Каталоги `react-leveling-plan/` и `dotnet-core-plan/` — учебные планы пользователя,
 в pnpm workspace не входят, к коду приложения отношения не имеют.
